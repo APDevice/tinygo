@@ -2200,13 +2200,13 @@ var (
 	DAC0 = DAC{}
 )
 
+// DACConfig placeholder for future expansion.
 type DACConfig struct {
-	// TBD
 }
 
+// Configure the DAC.
+// output pin must already be configured.
 func (dac DAC) Configure(config DACConfig) {
-	// output pin must already be configured
-
 	// Turn on clock for DAC
 	sam.PM.APBCMASK.SetBits(sam.PM_APBCMASK_DAC_)
 
@@ -2229,6 +2229,7 @@ func (dac DAC) Configure(config DACConfig) {
 	sam.DAC.CTRLA.Set(sam.DAC_CTRLA_ENABLE)
 }
 
+// WriteData writes a single value to the DAC.
 func (dac DAC) WriteData(value uint16) error {
 	syncDAC()
 	sam.DAC.DATA.Set(value & 0x3FF)
@@ -2238,6 +2239,8 @@ func (dac DAC) WriteData(value uint16) error {
 	return nil
 }
 
+// Write is intended to satisfy the Writer interface.
+// This current implementation is probably not very useful.
 func (dac DAC) Write(p []uint16) (n int, err error) {
 	for _, val := range p {
 		dac.WriteData(val)
@@ -2245,6 +2248,7 @@ func (dac DAC) Write(p []uint16) (n int, err error) {
 	return len(p), nil
 }
 
+// Close the DAC.
 func (dac DAC) Close() error {
 	return nil
 }
